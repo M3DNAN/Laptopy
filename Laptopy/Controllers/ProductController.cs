@@ -21,7 +21,7 @@ namespace Laptopy.Controllers
             if (page <= 0)
                 page = 1;
 
-            IQueryable<Product> Products = ProductRepository.GetAll();
+            IQueryable<Product> Products = ProductRepository.GetAll([e=>e.Category]);
 
             if (search != null && search.Length > 0)
             {
@@ -42,13 +42,13 @@ namespace Laptopy.Controllers
         [HttpGet("Details")]
         public IActionResult Details(int productsId)
         {
-            var products = ProductRepository.GetOne(expression: e => e.Id == productsId);
+            var products = ProductRepository.GetOne([e => e.Category],expression: e => e.Id == productsId);
             return Ok(products);
         }
-        [HttpPut]
+        [HttpGet("FilterBrand")]
         public IActionResult FilterBrand(string? filter = null)
         {
-            IQueryable<Product> products = ProductRepository.GetAll();
+            IQueryable<Product> products = ProductRepository.GetAll([e => e.Category]);
 
             if (!string.IsNullOrWhiteSpace(filter))
             {
@@ -59,16 +59,16 @@ namespace Laptopy.Controllers
             return NotFound();
 
         }
-        [HttpPut("FilterPrice")]
+        [HttpGet("FilterPrice")]
         public IActionResult FilterPrice(decimal StartPrice , decimal EndPrice)
         {
-            IQueryable<Product> products = ProductRepository.GetAll(expression:e=>e.Price >= StartPrice&& e.Price <= EndPrice);
+            IQueryable<Product> products = ProductRepository.GetAll([e => e.Category],expression:e=>e.Price >= StartPrice&& e.Price <= EndPrice);
             return Ok(products.ToList());
         }
-        [HttpPut("FilterRating")]
+        [HttpGet("FilterRating")]
         public IActionResult FilterRating(int rate)
         {
-            IQueryable<Product> products = ProductRepository.GetAll(expression: e => e.Rate == rate);
+            IQueryable<Product> products = ProductRepository.GetAll([e => e.Category],expression: e => e.Rate == rate);
             return Ok(products.ToList());
         }
 
